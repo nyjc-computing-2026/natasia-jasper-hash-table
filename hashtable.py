@@ -35,7 +35,7 @@ class HashTable:
     def __init__(self, size: int):
         self.size = size
         self.length = 0
-        # Add your code here
+        self._data = [None] * size
 
     def __repr__(self) -> str:
         return f"HashTable(size={self.size})"
@@ -46,21 +46,28 @@ class HashTable:
         If the key already exists in the hash table, the existing value
         is overwritten.
         """
-        raise NotImplementedError
+        index = _hash_key(key) % self.size
+        self._data[index] = value 
 
     def getitem(self, key: str) -> dict:
         """Retrieves the value associated with key, and returns it.
 
         If the key does not exist, a KeyError is raised.
         """
-        raise NotImplementedError
+        index = _hash_key(key) % self.size
+        if self._data[index] is None:
+            raise KeyError(f"key {key} not found")
+        return self._data[index]
 
     def delitem(self, key: str) -> None:
         """Deletes the key and its associated value from the hash table.
 
         If the key does not exist, a KeyError is raised.
         """
-        raise NotImplementedError
+        index = _hash_key(key) % self.size
+        if self._data[index] is None:
+            raise KeyError(f"key {key} not found")
+        self._data[index] = None
 
 
 class HashTableLinearProbing(HashTable):
@@ -85,21 +92,56 @@ class HashTableLinearProbing(HashTable):
         If the key already exists in the hash table, the existing value
         is overwritten.
         """
-        raise NotImplementedError
+        index = _hash_key(key) % self.size
+
+        for _ in range(self.size):
+            if self._data[index] is None:
+                self._data[index] = (key, value)
+                return
+            else:
+                existing_key, existing_value = self._data
+                if key == existing_key:
+                    self._data[index] = (key, value)
+                    return
+                else:
+                    index = (index + 1) % self.size
+        raise RuntimeError("hash table is full")
 
     def getitem(self, key: str) -> dict:
         """Retrieves the value associated with key, and returns it.
 
         If the key does not exist, a KeyError is raised.
         """
-        raise NotImplementedError
+        index = _hash_key(key) % self.size
+
+        for _ in range(self.size):
+            if self._data[index] is None:
+                raise KeyError(f"key {key} not found")
+            else:
+                existing_key, existing_value = self._data
+                if key == existing_key:
+                    return existing_value
+                else:
+                    index = (index + 1) % self.size
+        raise RuntimeError(f"key {key} not found")
 
     def delitem(self, key: str) -> None:
         """Deletes the key and its associated value from the hash table.
 
         If the key does not exist, a KeyError is raised.
         """
-        raise NotImplementedError
+        index = _hash_key(key) % self.size
+
+        for _ in range(self.size):
+            if self._data[index] is None:
+                raise KeyError(f"key {key} not found")
+            else:
+                existing_key, existing_value = self._data
+                if key == existing_key:
+                    self._data[index] = None
+                else:
+                    index = (index + 1) % self.size
+        raise RuntimeError(f"key {key} not found")
 
 
 class HashTableSeparateChaining(HashTable):
@@ -124,18 +166,25 @@ class HashTableSeparateChaining(HashTable):
         If the key already exists in the hash table, the existing value
         is overwritten.
         """
-        raise NotImplementedError
+        index = _hash_key(key) % self.size
+        self._data[index] = value 
 
     def getitem(self, key: str) -> dict:
         """Retrieves the value associated with key, and returns it.
 
         If the key does not exist, a KeyError is raised.
         """
-        raise NotImplementedError
+        index = _hash_key(key) % self.size
+        if self._data[index] is None:
+            raise KeyError("key {key} not found")
+        return self._data[index]
 
     def delitem(self, key: str) -> None:
         """Deletes the key and its associated value from the hash table.
 
         If the key does not exist, a KeyError is raised.
         """
-        raise NotImplementedError
+        index = _hash_key(key) % self.size
+        if self._data[index] is None:
+            raise KeyError("key {key} not found")
+        self._data[index] = None

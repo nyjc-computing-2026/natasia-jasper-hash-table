@@ -17,4 +17,8 @@ if __name__ == "__main__":
             data.append(record)
     for record in data:
         print(record["id"], _hash_key(record["id"]) % 15)
-    #     ht.setitem(record["id"], record)
+        ht.setitem(record["id"], record)
+
+    for item in ht._data:
+        if item is not None:
+            print(item)
