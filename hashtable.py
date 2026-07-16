@@ -138,7 +138,7 @@ class HashTableLinearProbing(HashTable):
             if self._data[index] is None:
                 raise KeyError(f"key {key} not found")
             else:
-                existing_key, existing_value = self._data
+                existing_key, existing_value = self._data[index]
                 if key == existing_key:
                     # Erasing this key-value pair could affect probing
                     # for subsequent key-value pairs
